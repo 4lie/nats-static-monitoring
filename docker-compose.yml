@@ -1,0 +1,29 @@
+version: "3.1"
+services:
+
+  nats-server:
+    image: nats:2.1.7-alpine
+    hostname: nats-server
+    container_name: nats-server
+    ports:
+      - 4222:4222
+      - 8222:8222
+
+  nats-streaming-server:
+    image: nats-streaming:0.18.0-alpine
+    hostname: nats-streaming-server
+    container_name: nats-streaming-server
+    depends_on:
+      - nats-server
+    command: nats-streaming-server -m 8223 --nats_server nats://nats-server:4222
+    ports:
+      - 8223:8223
+
+  elasticsearch:
+    image: bitnami/elasticsearch:7-debian-10
+    hostname: elasticsearch
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+    volumes:
+      - ./data/elasticsearch:/bitnami/elasticsearch/data
