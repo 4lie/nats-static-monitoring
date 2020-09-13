@@ -37,7 +37,7 @@ func (c *NATSClient) GetStats() (map[string]*Response, error) {
 		}
 
 		if resp.StatusCode() != http.StatusOK {
-			return nil, fmt.Errorf("request failed with status = %d and error = %s", resp.StatusCode(), resp.String())
+			return nil, fmt.Errorf("request for %s failed with status = %d and error = %s", URI, resp.StatusCode(), resp.String())
 		}
 
 		rawData := make(map[string]interface{})
@@ -63,7 +63,8 @@ func (c *NATSClient) Type() string {
 }
 
 func (c *NATSClient) extractEndpoint(uri string) string {
-	uri = strings.TrimLeft(uri, "/")
+	splitURI := strings.SplitAfter(uri, "/")
+	uri = strings.TrimLeft(splitURI[len(splitURI)-1], "/")
 	endpoint := strings.SplitN(uri, "?", 2)
 
 	return endpoint[0]
