@@ -7,13 +7,13 @@ const Default = `
 logger:
   level: debug
 
-nats:
-  servers:
-    - 127.0.0.1:8222
-
-nats-streaming:
-  servers:
-    - 127.0.0.1:8223
+monitor-servers:
+- server: http://demo.nats.io:8222
+  type: NATS
+  connect-timeout: 1s 
+  endpoint-uris:
+  - /varz
+  - /connz?subs=detail
 
 elasticsearch:
   servers:

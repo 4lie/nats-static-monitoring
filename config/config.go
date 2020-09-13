@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"strings"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -12,18 +13,16 @@ import (
 
 type (
 	Config struct {
-		Logger        Logger        `mapstructure:"logger" validate:"required"`
-		Nats          Nats          `mapstructure:"nats" validate:"required"`
-		NatsStreaming NatsStreaming `mapstructure:"nats-streaming" validate:"required"`
-		Elasticsearch Elasticsearch `mapstructure:"elasticsearch" validate:"required"`
+		Logger         Logger          `mapstructure:"logger" validate:"required"`
+		MonitorServers []MonitorServer `mapstructure:"monitor-servers" validate:"required"`
+		Elasticsearch  Elasticsearch   `mapstructure:"elasticsearch" validate:"required"`
 	}
 
-	Nats struct {
-		Servers []string `mapstructure:"servers" validate:"required"`
-	}
-
-	NatsStreaming struct {
-		Servers []string `mapstructure:"servers" validate:"required"`
+	MonitorServer struct {
+		Server         string        `mapstructure:"server" validate:"required"`
+		Type           string        `mapstructure:"type" validate:"required"`
+		ConnectTimeout time.Duration `mapstructure:"connect-timeout" validate:"required"`
+		EndpointURIs   []string      `mapstructure:"endpoint-uris" validate:"required"`
 	}
 
 	Elasticsearch struct {
