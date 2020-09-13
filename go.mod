@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/go-resty/resty/v2 v2.3.0
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cobra v1.0.0
