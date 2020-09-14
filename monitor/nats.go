@@ -37,7 +37,8 @@ func (c *NATSClient) GetStats() (map[string]*Response, error) {
 		}
 
 		if resp.StatusCode() != http.StatusOK {
-			return nil, fmt.Errorf("request for %s failed with status = %d and error = %s", URI, resp.StatusCode(), resp.String())
+			return nil,
+				fmt.Errorf("request for %s failed with status = %d and error = %s", URI, resp.StatusCode(), resp.String())
 		}
 
 		rawData := make(map[string]interface{})
