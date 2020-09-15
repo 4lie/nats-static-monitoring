@@ -3,8 +3,6 @@ package cmd
 import (
 	"os"
 
-	"github.com/4lie/nats-static-monitoring/cmd/scheduler"
-
 	"github.com/4lie/nats-static-monitoring/cmd/server"
 	"github.com/4lie/nats-static-monitoring/config"
 	"github.com/4lie/nats-static-monitoring/log"
@@ -29,7 +27,6 @@ func Execute() {
 	}
 
 	server.Register(root, cfg)
-	scheduler.Register(root, cfg)
 
 	if err := root.Execute(); err != nil {
 		logrus.Errorf("failed to execute root command: %s", err.Error())
