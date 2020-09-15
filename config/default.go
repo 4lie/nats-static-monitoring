@@ -37,4 +37,7 @@ monitor-servers:
 elasticsearch:
   servers:
     - 127.0.0.1:9200
+
+scheduler:
+  cron-pattern: "0 0/5 * * * *"
 `
