@@ -7,27 +7,47 @@ import (
 	"strings"
 	"time"
 
+	"github.com/4lie/nats-static-monitoring/config"
+
 	"github.com/go-resty/resty/v2"
 )
 
-type NATSClient struct {
-	baseURL    string
-	clientType string
-	URIs       []string
-	client     *resty.Client
+type Response struct {
+	Body  json.RawMessage
+	Key   string
+	Index string
+	Type  string
 }
 
-func NewNATSClient(url string, timeout time.Duration, clientType string, uris []string) *NATSClient {
-	return &NATSClient{
-		baseURL:    url,
-		client:     resty.New().SetHostURL(url).SetTimeout(timeout),
-		URIs:       uris,
-		clientType: clientType,
+type Client struct {
+	baseURL     string
+	clientType  string
+	serverAlias string
+	URIs        []string
+	client      *resty.Client
+}
+
+func Init(cfgs []config.MonitorServer) []*Client {
+	clients := make([]*Client, len(cfgs))
+	for index, cfg := range cfgs {
+		clients[index] = New(cfg.Server, cfg.ConnectTimeout, cfg.Type, cfg.Alias, cfg.Endpoints)
+	}
+
+	return clients
+}
+
+func New(url string, timeout time.Duration, clientType, alias string, uris []string) *Client {
+	return &Client{
+		baseURL:     url,
+		client:      resty.New().SetHostURL(url).SetTimeout(timeout),
+		URIs:        uris,
+		serverAlias: alias,
+		clientType:  clientType,
 	}
 }
 
 //nolint:goerr113
-func (c *NATSClient) GetStats() (map[string]*Response, error) {
+func (c *Client) GetStats() (map[string]*Response, error) {
 	response := make(map[string]*Response)
 
 	for _, URI := range c.URIs {
@@ -48,22 +68,19 @@ func (c *NATSClient) GetStats() (map[string]*Response, error) {
 			return nil, fmt.Errorf("error parsing request body: %w", err)
 		}
 
+		index := c.extractIndex(URI)
 		monitorResponse := new(Response)
 		monitorResponse.Type = c.clientType
 		monitorResponse.Body = resp.Body()
-		monitorResponse.ServerID = rawData["server_id"].(string)
-
-		response[c.extractEndpoint(URI)] = monitorResponse
+		monitorResponse.Key = c.serverAlias
+		monitorResponse.Index = index
+		response[index] = monitorResponse
 	}
 
 	return response, nil
 }
 
-func (c *NATSClient) Type() string {
-	return c.clientType
-}
-
-func (c *NATSClient) extractEndpoint(uri string) string {
+func (c *Client) extractIndex(uri string) string {
 	splitURI := strings.SplitAfter(uri, "/")
 	uri = strings.TrimLeft(splitURI[len(splitURI)-1], "/")
 	endpoint := strings.SplitN(uri, "?", 2)

@@ -1,7 +1,6 @@
 package monitor
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,8 +11,8 @@ import (
 
 const (
 	Timeout      = 2 * time.Second
-	ServerID     = "test_server_id"
 	Endpoint     = "test-end-point"
+	Alias        = "localhost"
 	ClientType   = "NATS"
 	JSONResponse = `{"server_id":"test_server_id","stats":"everything is fine"}`
 )
@@ -23,7 +22,7 @@ var EndpointURI = []string{"/test/test-end-point?test_param=true"}
 
 type ClientTestSuite struct {
 	suite.Suite
-	client *NATSClient
+	client *Client
 }
 
 func newHTTPServer() *httptest.Server {
@@ -32,6 +31,7 @@ func newHTTPServer() *httptest.Server {
 			_, err := rw.Write([]byte(JSONResponse))
 			if err != nil {
 				rw.WriteHeader(http.StatusInternalServerError)
+
 				return
 			}
 		}
@@ -44,7 +44,7 @@ func newHTTPServer() *httptest.Server {
 
 func (suite *ClientTestSuite) SetupSuite() {
 	server := newHTTPServer()
-	suite.client = NewNATSClient(server.URL, Timeout, ClientType, EndpointURI)
+	suite.client = New(server.URL, Timeout, ClientType, Alias, EndpointURI)
 }
 
 func (suite *ClientTestSuite) TestGetStats() {
@@ -54,10 +54,10 @@ func (suite *ClientTestSuite) TestGetStats() {
 	natsResponse, ok := r[Endpoint]
 	suite.True(ok)
 
-	suite.Equal(ServerID, natsResponse.ServerID)
+	suite.Equal(Alias, natsResponse.Key)
+	suite.Equal(Endpoint, natsResponse.Index)
 	suite.Equal(ClientType, natsResponse.Type)
 	suite.Equal(JSONResponse, string(natsResponse.Body))
-	fmt.Println(string(natsResponse.Body))
 }
 
 func TestClient(t *testing.T) {
