@@ -1,9 +1,3 @@
-package config
-
-const Namespace = "nsm"
-
-//nolint:lll
-const Default = `
 logger:
   level: debug
 
@@ -37,4 +31,3 @@ monitor-servers:
 elasticsearch:
   servers:
     - 127.0.0.1:9200
-`

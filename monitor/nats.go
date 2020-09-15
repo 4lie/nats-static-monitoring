@@ -20,11 +20,11 @@ type Response struct {
 }
 
 type Client struct {
-	baseURL     string
-	clientType  string
-	serverAlias string
-	URIs        []string
-	client      *resty.Client
+	URL       string
+	Type      string
+	Alias     string
+	Endpoints []string
+	client    *resty.Client
 }
 
 func Init(cfgs []config.MonitorServer) []*Client {
@@ -38,11 +38,11 @@ func Init(cfgs []config.MonitorServer) []*Client {
 
 func New(url string, timeout time.Duration, clientType, alias string, uris []string) *Client {
 	return &Client{
-		baseURL:     url,
-		client:      resty.New().SetHostURL(url).SetTimeout(timeout),
-		URIs:        uris,
-		serverAlias: alias,
-		clientType:  clientType,
+		URL:       url,
+		client:    resty.New().SetHostURL(url).SetTimeout(timeout),
+		Endpoints: uris,
+		Alias:     alias,
+		Type:      clientType,
 	}
 }
 
@@ -50,7 +50,7 @@ func New(url string, timeout time.Duration, clientType, alias string, uris []str
 func (c *Client) GetStats() (map[string]*Response, error) {
 	response := make(map[string]*Response)
 
-	for _, URI := range c.URIs {
+	for _, URI := range c.Endpoints {
 		resp, err := c.client.R().Get(URI)
 		if err != nil {
 			return nil, fmt.Errorf("error sending request to %s: %w", URI, err)
@@ -70,9 +70,9 @@ func (c *Client) GetStats() (map[string]*Response, error) {
 
 		index := c.extractIndex(URI)
 		monitorResponse := new(Response)
-		monitorResponse.Type = c.clientType
+		monitorResponse.Type = c.Type
 		monitorResponse.Body = resp.Body()
-		monitorResponse.Key = c.serverAlias
+		monitorResponse.Key = c.Alias
 		monitorResponse.Index = index
 		response[index] = monitorResponse
 	}
