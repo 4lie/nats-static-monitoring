@@ -21,8 +21,9 @@ type (
 	MonitorServer struct {
 		Server         string        `mapstructure:"server" validate:"required"`
 		Type           string        `mapstructure:"type" validate:"required"`
+		Alias          string        `mapstructure:"alias" validate:"required"`
 		ConnectTimeout time.Duration `mapstructure:"connect-timeout" validate:"required"`
-		EndpointURIs   []string      `mapstructure:"endpoint-uris" validate:"required"`
+		Endpoints      []string      `mapstructure:"endpoints" validate:"required"`
 	}
 
 	Elasticsearch struct {

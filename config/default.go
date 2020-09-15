@@ -9,28 +9,30 @@ logger:
 
 monitor-servers:
 - server: http://127.0.0.1:8222
-  type: NATS
+  type: nats
+  alias: n-localhost
   connect-timeout: 1s 
-  endpoint-uris:
-  - /varz
-  - /connz?subs=detail&auth=1&state=any
-  - /routez?sub=detail
-  - /gatewayz?accs=1
-  - /leafz?subs=1
-  - /subsz?subs=1
+  endpoints:
+    - /varz
+    - /connz?subs=detail&auth=1&state=any
+    - /routez?sub=detail
+    - /gatewayz?accs=1
+    - /leafz?subs=1
+    - /subsz?subs=1
 - server: http://127.0.0.1:8223
-  type: NATS-Streaming
+  type: nats-streaming
+  alias: ns-localhost
   connect-timeout: 1s 
-  endpoint-uris:
-  - /varz
-  - /connz?subs=detail&auth=1&state=any
-  - /routez?sub=detail
-  - /gatewayz?accs=1
-  - /leafz?subs=1
-  - /streaming/serverz
-  - /streaming/storez
-  - /streaming/clientsz?subs=1
-  - /streaming/channelsz?subs=1
+  endpoints:
+    - /varz
+    - /connz?subs=detail&auth=1&state=any
+    - /routez?sub=detail
+    - /gatewayz?accs=1
+    - /leafz?subs=1
+    - /streaming/serverz
+    - /streaming/storez
+    - /streaming/clientsz?subs=1
+    - /streaming/channelsz?subs=1
 
 elasticsearch:
   servers:
