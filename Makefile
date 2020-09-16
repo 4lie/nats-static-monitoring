@@ -15,12 +15,6 @@ all: format lint build
 build:
 	CGO_ENABLED=1 go build -o ${APP} -ldflags $(LDFLAGS)  .
 
-build-static:
-	CGO_ENABLED=1 go build -v -o $(APP) -a -installsuffix cgo -ldflags $(LDFLAGS) .
-
-install:
-	CGO_ENABLED=1 go install -o ${APP} -ldflags $(LDFLAGS)
-
 # Please do not use `make run` on production. There is a performance hit due to existence of -race flag.
 run:
 	go run -race -ldflags $(LDFLAGS) . server
