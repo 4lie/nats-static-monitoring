@@ -8,7 +8,7 @@ NATS / NATS Streaming Static Monitoring Service.
 
 ## Introduction
 
-We read NATS and NATS Streaming monitoring endpoint and store the into Elasticsearch and you can query on them using Kibana, Grafana or etc.
+We reads NATS and NATS Streaming monitoring endpoint and store them into Elasticsearch and you can query on them using Kibana, Grafana or etc.
 
 [1]: https://img.shields.io/drone/build/4lie/nats-static-monitoring.svg?style=flat-square&logo=drone
 [2]: https://cloud.drone.io/4lie/nats-static-monitoring
