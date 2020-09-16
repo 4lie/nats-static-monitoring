@@ -16,6 +16,7 @@ type (
 		Logger         Logger          `mapstructure:"logger" validate:"required"`
 		MonitorServers []MonitorServer `mapstructure:"monitor-servers" validate:"required"`
 		Elasticsearch  Elasticsearch   `mapstructure:"elasticsearch" validate:"required"`
+		Scheduler      Scheduler       `mapstructure:"scheduler" validate:"required"`
 	}
 
 	MonitorServer struct {
@@ -32,6 +33,10 @@ type (
 
 	Logger struct {
 		Level string `mapstructure:"level" validate:"required"`
+	}
+
+	Scheduler struct {
+		CronPattern string `mapstructure:"cron-pattern" validate:"required"`
 	}
 )
 
