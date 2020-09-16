@@ -1,7 +1,7 @@
 #
 # 1. Build Container
 #
-FROM golang:1.13-alpine AS build
+FROM golang:1.15-alpine AS build
 
 ENV GO111MODULE=on \
     GOOS=linux \
@@ -31,7 +31,7 @@ RUN make install && \
 #
 # 2. Runtime Container
 #
-FROM alpine:3.9
+FROM alpine:3.12
 
 ENV TZ=Asia/Tehran \
     PATH="/app:${PATH}"
