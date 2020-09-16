@@ -20,7 +20,7 @@ services:
       - 8223:8223
 
   elasticsearch:
-    image: bitnami/elasticsearch:7-debian-10
+    image: bitnami/elasticsearch:7.9.1
     hostname: elasticsearch
     container_name: elasticsearch
     ports:
