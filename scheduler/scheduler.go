@@ -1,6 +1,8 @@
 package scheduler
 
 import (
+	"time"
+
 	"github.com/4lie/nats-static-monitoring/config"
 	"github.com/4lie/nats-static-monitoring/monitor"
 	"github.com/robfig/cron"
@@ -22,7 +24,7 @@ func (s *Scheduler) fetchAndReport(monitorServers []config.MonitorServer) {
 	for _, client := range clients {
 		response, err := client.GetStats()
 		if err != nil {
-			logrus.Errorf("scheduler: unable to fetch data from %s: %s", client.URL, err)
+			logrus.Errorf("unable to fetch data from %s: %s", client.URL, err)
 		}
 
 		s.ElasticWriter.Write(response)
@@ -33,6 +35,7 @@ func (s *Scheduler) Start(cronPattern string, monitorServers []config.MonitorSer
 	c := cron.New()
 
 	err := c.AddFunc(cronPattern, func() {
+		logrus.Infof("scheduler start at: %s", time.Now().Format(time.RFC3339))
 		s.fetchAndReport(monitorServers)
 	})
 	if err != nil {

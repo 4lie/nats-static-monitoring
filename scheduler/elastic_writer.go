@@ -22,12 +22,12 @@ func NewElasticWriter(elasticClient *elastic.Client) *ElasticWriter {
 
 func (e ElasticWriter) Write(response map[string]*monitor.Response) {
 	for _, value := range response {
-		index := fmt.Sprintf("%s_%s", value.Type, value.Index)
+		index := fmt.Sprintf("%s-%s", value.Type, value.Index)
 
 		_, err := e.ElasticClient.Index().Index(index).Type("doc").Id(value.Key).BodyJson(value.Body).
 			Refresh("false").Do(context.Background())
 		if err != nil {
-			logrus.Errorf("elastic_writer: unable to write data in elasticsearch %s-%s: %s", index, value.Key, err)
+			logrus.Errorf("unable to write data ro elastic index %s with key %s: %s", index, value.Key, err.Error())
 		}
 	}
 }

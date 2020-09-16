@@ -25,5 +25,5 @@ services:
     container_name: elasticsearch
     ports:
       - 9200:9200
-    volumes:
-      - ./data/elasticsearch:/bitnami/elasticsearch/data
+#    volumes:
+#      - ./data/elasticsearch:/bitnami/elasticsearch/data

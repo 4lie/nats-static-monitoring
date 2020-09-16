@@ -9,8 +9,8 @@ logger:
 
 monitor-servers:
   - server: http://127.0.0.1:8222
-    type: nats
-    alias: n-localhost
+    type: nats-core
+    alias: core-01
     connect-timeout: 1s
     endpoints:
       - /varz
@@ -21,7 +21,7 @@ monitor-servers:
       - /subsz?subs=1
   - server: http://127.0.0.1:8223
     type: nats-streaming
-    alias: ns-localhost
+    alias: streaming-01
     connect-timeout: 1s
     endpoints:
       - /varz
@@ -39,5 +39,5 @@ elasticsearch:
     - http://127.0.0.1:9200
 
 scheduler:
-  cron-pattern: "0 0/5 * * * *"
+  cron-pattern: "0/10 * * * * *"
 `

@@ -13,24 +13,29 @@ import (
 )
 
 func main(cfg config.Config) {
-	client, err := elastic.NewClient(elastic.SetURL(cfg.Elasticsearch.Servers...))
-	if err != nil {
-		logrus.Panicf("failed to create elasticsearch client: %s", err.Error())
+	opts := []elastic.ClientOptionFunc{
+		elastic.SetURL(cfg.Elasticsearch.Servers...),
 	}
 
-	elasticWriter := scheduler.NewElasticWriter(client)
+	elasticClient, err := elastic.NewSimpleClient(opts...)
+	if err != nil {
+		logrus.Fatalf("failed to create elasticsearch elasticClient: %s", err.Error())
+	}
+
+	elasticWriter := scheduler.NewElasticWriter(elasticClient)
 	monitoringScheduler := scheduler.New(elasticWriter)
+
+	if err := monitoringScheduler.Start(cfg.Scheduler.CronPattern, cfg.MonitorServers); err != nil {
+		logrus.Fatalf("Failed to start scheduler: %s", err.Error())
+	}
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 
-	go func() {
-		if err := monitoringScheduler.Start(cfg.Scheduler.CronPattern, cfg.MonitorServers); err != nil {
-			logrus.Fatalf("Failed to start scheduler: %s", err.Error())
-		}
-	}()
+	logrus.Info("server started!")
 
 	s := <-sig
+
 	logrus.Infof("signal %s received", s)
 }
 

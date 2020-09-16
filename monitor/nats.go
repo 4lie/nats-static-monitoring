@@ -50,25 +50,25 @@ func New(url string, timeout time.Duration, clientType, alias string, uris []str
 func (c *Client) GetStats() (map[string]*Response, error) {
 	response := make(map[string]*Response)
 
-	for _, URI := range c.Endpoints {
-		resp, err := c.client.R().Get(URI)
+	for _, endpoint := range c.Endpoints {
+		resp, err := c.client.R().Get(endpoint)
 		if err != nil {
-			return nil, fmt.Errorf("error sending request to %s: %w", URI, err)
+			return nil, fmt.Errorf("error sending request to %s: %w", endpoint, err)
 		}
 
 		if resp.StatusCode() != http.StatusOK {
 			return nil,
-				fmt.Errorf("request for %s failed with status = %d and error = %s", URI, resp.StatusCode(), resp.String())
+				fmt.Errorf("request for %s failed with status = %d and error = %s", endpoint, resp.StatusCode(), resp.String())
 		}
 
 		rawData := make(map[string]interface{})
 
 		err = json.Unmarshal(resp.Body(), &rawData)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing request body: %w", err)
+			return nil, fmt.Errorf("error parsing request body: %s", err.Error())
 		}
 
-		index := c.extractIndex(URI)
+		index := c.extractIndex(endpoint)
 		monitorResponse := new(Response)
 		monitorResponse.Type = c.Type
 		monitorResponse.Body = resp.Body()

@@ -13,7 +13,7 @@ const (
 	Timeout      = 2 * time.Second
 	Endpoint     = "test-end-point"
 	Alias        = "localhost"
-	ClientType   = "NATS"
+	ClientType   = "nats"
 	JSONResponse = `{"server_id":"test_server_id","stats":"everything is fine"}`
 )
 
