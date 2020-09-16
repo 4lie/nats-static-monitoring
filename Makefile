@@ -19,7 +19,7 @@ build-static:
 	CGO_ENABLED=1 go build -v -o $(APP) -a -installsuffix cgo -ldflags $(LDFLAGS) .
 
 install:
-	CGO_ENABLED=1 go install -o ${APP} -ldflags $(LDFLAGS)
+	CGO_ENABLED=1 go install -i -o ${APP} -ldflags $(LDFLAGS)
 
 # Please do not use `make run` on production. There is a performance hit due to existence of -race flag.
 run:
