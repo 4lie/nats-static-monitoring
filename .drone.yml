@@ -1,0 +1,33 @@
+---
+kind: pipeline
+name: default
+type: docker
+
+steps:
+
+  - name: lint
+    image: golangci/golangci-lint:v1.30.0
+    commands:
+      - make lint
+
+  - name: test
+    image: golang
+    commands:
+      - make ci-test
+
+  - name: coverage
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov_token
+      files:
+        - coverage.txt
+
+  - name: docker
+    image: plugins/docker
+    settings:
+      username: 1995parham
+      password:
+        from_secret: docker_password
+      repo: 4lie/nats-static-monitoring
+      tags: latest
