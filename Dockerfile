@@ -24,9 +24,9 @@ COPY . /src
 
 # Build components.
 # Put built binaries and runtime resources in /app dir ready to be copied over or used.
-RUN make install && \
+RUN make build && \
     mkdir -p /app && \
-    cp -r $GOPATH/bin/nsm /app/
+    cp -r nsm /app/
 
 #
 # 2. Runtime Container
