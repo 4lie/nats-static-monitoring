@@ -1,6 +1,10 @@
 package server
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/4lie/nats-static-monitoring/config"
 	"github.com/4lie/nats-static-monitoring/scheduler"
 	"github.com/olivere/elastic"
@@ -17,9 +21,17 @@ func main(cfg config.Config) {
 	elasticWriter := scheduler.NewElasticWriter(client)
 	monitoringScheduler := scheduler.New(elasticWriter)
 
-	if err := monitoringScheduler.Start(cfg.Scheduler.CronPattern, cfg.MonitorServers); err != nil {
-		logrus.Fatalf("Failed to start scheduler: %s", err.Error())
-	}
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		if err := monitoringScheduler.Start(cfg.Scheduler.CronPattern, cfg.MonitorServers); err != nil {
+			logrus.Fatalf("Failed to start scheduler: %s", err.Error())
+		}
+	}()
+
+	s := <-sig
+	logrus.Infof("signal %s received", s)
 }
 
 // Register Server command.
