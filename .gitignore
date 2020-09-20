@@ -116,4 +116,5 @@ fabric.properties
 .DS_Store
 data
 nsm
+!.chart/nsm
 coverage.txt
