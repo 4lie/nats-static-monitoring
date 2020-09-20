@@ -8,7 +8,7 @@ image:
   repository: 4lie/nats-static-monitoring
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -27,13 +27,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
@@ -60,17 +53,16 @@ endpoints:
     - /leafz?subs=1
     - /subsz?subs=1
 
-
 config:
   nats:
-    - server: http://127.0.0.1:8223
-      type: nats-streaming
-      alias: streaming-01
-      connect-timeout: 1s
-    - server: http://127.0.0.1:8222
+    - server: http://nats-01.4lie.ir:8222
       type: nats-core
-      alias: core-01
+      alias: nats-01.4lie.ir
+      connect-timeout: 1s
+    - server: http://nats-streaming-01.4lie.ir:8222
+      type: nats-streaming
+      alias: nats-streaming-01.4lie.ir
       connect-timeout: 1s
   elasticsearch:
     servers:
-      - http://127.0.0.1:9200
+      - http://elasticsearch-01.4lie.ir:9200

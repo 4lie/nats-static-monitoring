@@ -1,5 +1,5 @@
 logger:
-  level: debug
+  level: error
 
 monitor-servers:
   {{ range .Values.config.nats }}
