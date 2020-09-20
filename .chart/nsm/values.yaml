@@ -1,0 +1,76 @@
+# Default values for nsm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 4lie/nats-static-monitoring
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+endpoints:
+  streaming:
+    - /varz
+    - /connz?subs=detail&auth=1&state=any
+    - /routez?sub=detail
+    - /gatewayz?accs=1
+    - /leafz?subs=1
+    - /streaming/serverz
+    - /streaming/storez
+    - /streaming/clientsz?subs=1
+    - /streaming/channelsz?subs=1
+  core:
+    - /varz
+    - /connz?subs=detail&auth=1&state=any
+    - /routez?sub=detail
+    - /gatewayz?accs=1
+    - /leafz?subs=1
+    - /subsz?subs=1
+
+
+config:
+  nats:
+    - server: http://127.0.0.1:8223
+      type: nats-streaming
+      alias: streaming-01
+      connect-timeout: 1s
+    - server: http://127.0.0.1:8222
+      type: nats-core
+      alias: core-01
+      connect-timeout: 1s
+  elasticsearch:
+    servers:
+      - http://127.0.0.1:9200

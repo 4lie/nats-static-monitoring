@@ -1,0 +1,21 @@
+logger:
+  level: debug
+
+monitor-servers:
+  {{ range .Values.config.nats }}
+  - server: {{ .server }}
+    type: {{ .type }}
+    alias: {{ .alias }}
+    {{ if eq .type "nats-streaming" }}
+    endpoints: {{- toYaml $.Values.endpoints.streaming	}}
+    {{ else }}
+    endpoints: {{- toYaml $.Values.endpoints.core }}
+    {{ end }}
+  {{ end }}
+
+elasticsearch:
+  servers:
+    {{- toYaml .Values.config.elasticsearch.servers | nindent 2 }}
+
+scheduler:
+  cron-pattern: "0/10 * * * * *"
