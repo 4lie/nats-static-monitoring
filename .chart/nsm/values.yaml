@@ -8,7 +8,7 @@ image:
   repository: 4lie/nats-static-monitoring
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -59,7 +59,6 @@ endpoints:
     - /gatewayz?accs=1
     - /leafz?subs=1
     - /subsz?subs=1
-
 
 config:
   nats:
